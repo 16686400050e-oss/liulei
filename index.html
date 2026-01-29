@@ -481,6 +481,16 @@
             transform: translateX(-50%) translateY(0);
         }
 
+        /* Dify聊天机器人样式自定义 */
+        #dify-chatbot-bubble-button {
+            background-color: var(--primary-color) !important;
+        }
+        
+        #dify-chatbot-bubble-window {
+            width: 24rem !important;
+            height: 40rem !important;
+        }
+
         /* 响应式设计 */
         @media (max-width: 768px) {
             body {
@@ -530,6 +540,14 @@
             
             .page-info, .quick-actions {
                 width: 100%;
+            }
+            
+            /* Dify聊天机器人移动端调整 */
+            #dify-chatbot-bubble-window {
+                width: 100% !important;
+                max-width: 24rem !important;
+                height: 80% !important;
+                max-height: 40rem !important;
             }
         }
 
@@ -682,6 +700,32 @@
 
     <!-- 复制提示框 -->
     <div class="copy-toast" id="copyToast">企业邮箱复制成功！</div>
+
+    <!-- Dify聊天机器人嵌入代码 -->
+    <script>
+     window.difyChatbotConfig = {
+      token: 'c4eFunTegProdlqG',
+      inputs: {
+        // You can define the inputs from the Start node here
+        // key is the variable name
+        // e.g.
+        // name: "NAME"
+      },
+      systemVariables: {
+        // user_id: 'YOU CAN DEFINE USER ID HERE',
+        // conversation_id: 'YOU CAN DEFINE CONVERSATION ID HERE, IT MUST BE A VALID UUID',
+      },
+      userVariables: {
+        // avatar_url: 'YOU CAN DEFINE USER AVATAR URL HERE',
+        // name: 'YOU CAN DEFINE USER NAME HERE',
+      },
+     }
+    </script>
+    <script
+     src="https://udify.app/embed.min.js"
+     id="c4eFunTegProdlqG"
+     defer>
+    </script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
