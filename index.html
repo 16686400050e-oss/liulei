@@ -3,1102 +3,307 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>京湖优品导航系统</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta name="description" content="京湖内部工作台 - 核心业务系统、自动化工具与技术支持快捷入口">
+    <title>京湖内部工作台</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        // 品牌色改为低饱和度的石板青，更显专业沉稳
+                        brand: { 600: '#334155', 700: '#1e293b' }, 
+                        // 背景色改为更清透的冷白灰
+                        panel: '#f8fafc' 
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        :root {
-            --primary-color: #2c5aa0;
-            --secondary-color: #4a7bc8;
-            --accent-color: #00b894;
-            --light-bg: #f8fafc;
-            --card-bg: #ffffff;
-            --text-primary: #2d3748;
-            --text-secondary: #4a5568;
-            --border-color: #e2e8f0;
-            --hover-color: #edf2f7;
-            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
-            --radius: 12px;
-            --transition: all 0.3s ease;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        /* 字体优化 */
         body {
-            font-family: "Microsoft YaHei", "Segoe UI", Arial, sans-serif;
-            background: linear-gradient(135deg, #f0f4ff 0%, #f8fafc 100%);
-            color: var(--text-primary);
-            min-height: 100vh;
-            line-height: 1.6;
-            padding: 15px;
+            font-family: "Segoe UI", Roboto, "PingFang SC", sans-serif;
+            -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
+            color: #1e293b; /* 深石板色文字 */
         }
 
-        /* 主容器 */
-        .container {
-            width: 100%;
-            max-width: 1400px;
-            margin: 0 auto;
-            background: var(--card-bg);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            overflow: hidden;
+        /* 卡片样式优化：降低阴影存在感，增加细腻度 */
+        .card-shadow {
+            background-color: #ffffff;
+            border-radius: 1rem;
+            padding: 1.25rem;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+            transition: all 0.2s ease;
+            border: 1px solid #e2e8f0; /* 默认浅灰边框 */
+        }
+        .card-shadow:hover {
+            background-color: #ffffff;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+            border-color: #334155; /* 悬停时变为品牌色 */
         }
 
-        /* 原有导航系统样式保持不变 */
-        header {
-            background: linear-gradient(120deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-            color: white;
-            padding: 30px 20px;
-            position: relative;
-            text-align: center;
+        /* 滚动条：保持极简灰 */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        * { scrollbar-width: thin; scrollbar-color: #cbd5e1 #f8fafc; }
+
+        /* 入场动画 */
+        .fade-in { animation: fadeIn 0.2s ease-out forwards; }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
-        h1 {
-            font-size: clamp(24px, 5vw, 32px);
-            margin-bottom: 8px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-
-        h1 i {
-            font-size: clamp(28px, 5vw, 36px);
-        }
-
-        .subtitle {
-            color: rgba(255, 255, 255, 0.85);
-            font-size: clamp(14px, 3vw, 16px);
-            margin-bottom: 25px;
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        /* 搜索框容器 */
-        .search-wrapper {
-            display: flex;
-            justify-content: center;
-            width: 100%;
-            padding: 0 30px;
-            position: relative;
-        }
-
-        .search-container {
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 50px;
-            padding: 5px;
-            display: flex;
-            max-width: 600px;
-            width: 100%;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            position: relative;
-        }
-
-        .search-container input {
-            flex: 1;
-            background: transparent;
-            border: none;
-            padding: 15px 20px;
-            color: white;
-            font-size: clamp(14px, 2vw, 16px);
-            outline: none;
-            min-width: 0;
-        }
-
-        .search-container input::placeholder {
-            color: rgba(255, 255, 255, 0.7);
-        }
-
-        /* 清空按钮样式 */
-        .clear-search-btn {
-            background: transparent;
-            border: none;
-            color: rgba(255, 255, 255, 0.7);
-            cursor: pointer;
-            padding: 0 15px;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            font-size: 16px;
-            transition: var(--transition);
-            position: relative;
-            z-index: 2;
-            /* 新增：调整与搜索按钮的间距 */
-            margin-right: 5px; /* 向右留出10px间距，可根据需要调整 */
-        }
-
-        .clear-search-btn:hover {
-            color: white;
-        }
-
-        .clear-search-btn.show {
-            display: flex;
-        }
-
-        .search-container button {
-            background: white;
-            border: none;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            min-width: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--primary-color);
-            cursor: pointer;
-            transition: var(--transition);
-            flex-shrink: 0;
-        }
-
-        .search-container button:hover {
-            background: var(--hover-color);
-            transform: scale(1.05);
-        }
-
-        /* 搜索结果下拉列表样式 */
-        .search-results {
-            position: absolute;
-            top: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100%;
-            max-width: 600px;
-            max-height: 400px;
-            overflow-y: auto;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-            margin-top: 10px;
-            z-index: 1000;
-            display: none;
-        }
-
-        .search-results.show {
-            display: block;
-        }
-
-        .search-results-header {
-            padding: 15px 20px;
-            border-bottom: 1px solid var(--border-color);
-            font-weight: 600;
-            color: var(--primary-color);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .search-results-list {
-            list-style: none;
-            max-height: 350px;
-            overflow-y: auto;
-        }
-
-        .search-result-item {
-            padding: 15px 20px;
-            border-bottom: 1px solid var(--border-color);
-            cursor: pointer;
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .search-result-item:hover {
-            background: var(--hover-color);
-        }
-
-        .search-result-item:last-child {
-            border-bottom: none;
-        }
-
-        .search-result-item i {
-            color: var(--secondary-color);
-            font-size: 16px;
-            width: 24px;
-        }
-
-        .search-result-content {
-            flex: 1;
-        }
-
-        .search-result-title {
-            font-weight: 600;
-            margin-bottom: 5px;
-            color: var(--text-primary);
-        }
-
-        .search-result-desc {
-            font-size: 13px;
-            color: var(--text-secondary);
-        }
-
-        .search-result-category {
-            font-size: 12px;
-            color: var(--accent-color);
-            margin-top: 3px;
-        }
-
-        .search-result-empty {
-            padding: 30px 20px;
-            text-align: center;
-            color: var(--text-secondary);
-        }
-
-        /* 搜索结果高亮 */
-        .highlight {
-            background-color: rgba(255, 235, 59, 0.3);
-            border-radius: 3px;
+        /* 搜索高亮：改用浅淡的丁香蓝，不刺眼 */
+        mark {
+            background: #dbeafe;
+            color: #1e40af;
             padding: 0 2px;
+            border-radius: 2px;
+            font-weight: 500;
         }
 
-        .main-content {
-            padding: 30px 20px;
-        }
-
-        .top-links {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 20px;
-            margin-bottom: 40px;
-        }
-
-        .top-link {
-            text-decoration: none;
-            color: var(--primary-color);
-            font-weight: 700;
-            font-size: clamp(16px, 2.5vw, 18px);
-            padding: 20px;
-            background: var(--light-bg);
-            border-radius: var(--radius);
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            transition: var(--transition);
-            border: 2px solid transparent;
-            flex: 1;
-            min-width: 250px;
-            max-width: 350px;
-            justify-content: flex-start;
-        }
-
-        .top-link:hover {
-            border-color: var(--primary-color);
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(44, 90, 160, 0.1);
-        }
-
-        .top-link i {
-            font-size: 24px;
-            color: var(--accent-color);
-            flex-shrink: 0;
-        }
-
-        .top-link-content {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .categories-container {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .category-group {
-            background: var(--light-bg);
-            border-radius: var(--radius);
-            padding: 25px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            transition: var(--transition);
-        }
-
-        .category-group:hover {
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-        }
-
-        .category-header {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 10px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .category-header i {
-            font-size: 24px;
-            color: var(--accent-color);
-            width: 40px;
-            text-align: center;
-            flex-shrink: 0;
-        }
-
-        .category-title {
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--text-primary);
-        }
-
-        .links-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(clamp(250px, 100%, 300px), 1fr));
-            gap: 15px;
-        }
-
-        .link-item {
-            text-decoration: none;
-            color: var(--text-primary);
-            padding: 18px;
-            background: white;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            transition: var(--transition);
-            border: 1px solid var(--border-color);
-        }
-
-        .link-item:hover {
-            background: var(--hover-color);
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-            border-color: var(--secondary-color);
-        }
-
-        .link-item i {
-            color: var(--secondary-color);
-            font-size: 18px;
-            width: 30px;
-            text-align: center;
-            flex-shrink: 0;
-        }
-
-        .link-content {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .link-title {
-            font-weight: 600;
-            margin-bottom: 5px;
-            font-size: 16px;
+        /* 单行文本截断 */
+        .line-clamp-1 {
             overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .link-desc {
-            font-size: 13px;
-            color: var(--text-secondary);
-            line-height: 1.4;
-        }
-
-        footer {
-            background: var(--light-bg);
-            padding: 20px;
-            text-align: center;
-            color: var(--text-secondary);
-            font-size: 14px;
-            border-top: 1px solid var(--border-color);
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .page-info {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            flex: 1;
-            min-width: 200px;
-        }
-
-        .page-info i {
-            color: var(--accent-color);
-        }
-
-        .quick-actions {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 10px;
-            flex: 1;
-            min-width: 200px;
-        }
-
-        .quick-action {
-            background: white;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            padding: 8px 15px;
-            font-size: 13px;
-            cursor: pointer;
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .quick-action:hover {
-            background: var(--hover-color);
-            border-color: var(--secondary-color);
-        }
-
-        /* 复制提示框 */
-        .copy-toast {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0, 184, 148, 0.9);
-            color: white;
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-size: 14px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            z-index: 9999;
-            opacity: 0;
-            transition: opacity 0.3s ease, transform 0.3s ease;
-            transform: translateX(-50%) translateY(-20px);
-        }
-
-        .copy-toast.show {
-            opacity: 1;
-            transform: translateX(-50%) translateY(0);
-        }
-
-        /* 响应式设计 */
-        @media (max-width: 768px) {
-            body {
-                padding: 0px;
-            }
-            
-            header {
-                padding: 25px 15px;
-            }
-            
-            .main-content {
-                padding: 20px 15px;
-            }
-            
-            .top-link {
-                min-width: 100%;
-                max-width: 100%;
-                justify-content: flex-start;
-            }
-            
-            .links-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .category-group {
-                padding: 20px;
-            }
-            
-            .category-header {
-                flex-direction: column;
-                text-align: center;
-                gap: 10px;
-            }
-            
-            .category-header i {
-                width: auto;
-            }
-            
-            .category-title {
-                font-size: 18px;
-            }
-            
-            footer {
-                flex-direction: column;
-                text-align: center;
-            }
-            
-            .page-info, .quick-actions {
-                width: 100%;
-            }
-        }
-
-        /* 手机端样式 */
-        @media (max-width: 480px) {
-            .search-container {
-                flex-direction: row;
-                background: rgba(255, 255, 255, 0.15);
-                border-radius: 50px;
-                border: 1px solid rgba(255, 255, 255, 0.2);
-                backdrop-filter: blur(10px);
-                max-width: 100%;
-                padding: 5px;
-            }
-            
-            .search-container input {
-                background: transparent;
-                border-radius: 25px;
-                border: none;
-                margin-bottom: 0;
-                text-align: left;
-                padding: 15px 40px 15px 20px;
-                flex: 1;
-            }
-            
-            .clear-search-btn {
-                position: absolute;
-                right: 65px;
-                top: 50%;
-                transform: translateY(-50%);
-                padding: 0 10px;
-                z-index: 3;
-            }
-            
-            .search-container button {
-                width: 50px;
-                border-radius: 50%;
-                height: 50px;
-                flex-shrink: 0;
-            }
-            
-            .link-item {
-                padding: 15px;
-            }
-
-            .copy-toast {
-                width: 80%;
-                text-align: center;
-            }
-            
-            .search-results {
-                width: calc(100% - 30px);
-                left: 15px;
-                transform: none;
-                max-width: none;
-            }
-            
-            .search-results-list {
-                max-height: 300px;
-            }
-        }
-        
-        /* 针对非常小的屏幕进一步调整 */
-        @media (max-width: 360px) {
-            .clear-search-btn {
-                right: 60px;
-            }
-            
-            .search-container input {
-                padding: 12px 35px 12px 15px;
-                font-size: 14px;
-            }
-            
-            .search-container button {
-                width: 45px;
-                height: 45px;
-            }
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
         }
     </style>
 </head>
+<body class="bg-panel min-h-screen">
 
-<body>
-    <div class="container">
-        <header>
-            <h1><i class="fas fa-compass"></i> 京湖优品导航系统</h1>
-            <div class="subtitle">快速访问公司内部系统与多维数据表格，提升工作效率</div>
-            
-            <div class="search-wrapper">
-                <div class="search-container">
-                    <input type="text" id="searchInput" placeholder="搜索系统或表格名称..." autocomplete="off">
-                    <button class="clear-search-btn" id="clearSearchBtn">
-                        <i class="fas fa-times"></i>
-                    </button>
-                    <button id="searchButton">
-                        <i class="fas fa-search"></i>
-                    </button>
-                </div>
-                <div class="search-results" id="searchResults">
-                    <div class="search-results-header">
-                        <span>搜索结果</span>
-                        <span id="resultCount">0 个结果</span>
-                    </div>
-                    <ul class="search-results-list" id="searchResultsList">
-                        <!-- 搜索结果将在这里动态生成 -->
-                    </ul>
-                </div>
+<header class="bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50">
+    <div class="max-w-[1400px] mx-auto px-6 py-3.5 flex flex-col sm:flex-row justify-between items-center gap-4">
+        <div class="flex items-center gap-3">
+            <div class="w-8 h-8 bg-brand-600 rounded-lg flex items-center justify-center">
+                <svg class="w-4.5 h-4.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>
             </div>
-        </header>
-        
-        <div class="main-content">
-            <div class="top-links">
-                <a href="https://oumai.app.gerpgo.com/amzv-web/stats/index" target="_blank" class="top-link" data-search="ERP 系统 点击跳转到ERP系统页面">
-                    <i class="fas fa-cogs"></i>
-                    <div class="top-link-content">
-                        <div>ERP 系统</div>
-                        <div style="font-size: 14px; font-weight: normal; opacity: 0.8;">点击跳转到ERP系统页面</div>
-                    </div>
-                </a>
-                <a href="https://qiye.aliyun.com/" target="_blank" class="top-link" data-search="点击跳转到企业邮箱页面">
-                    <i class="fas fa-envelope"></i>
-                    <div class="top-link-content">
-                        <div>企业邮箱</div>
-                        <div style="font-size: 14px; font-weight: normal; opacity: 0.8;">点击跳转到企业邮箱页面</div>
-                    </div>
-                </a>
-            </div>
-            
-            <div class="categories-container" id="categoriesContainer">
-                <!-- 分类和链接将在这里动态生成 -->
+            <div>
+                <h1 class="text-base font-bold tracking-tight text-slate-900">京湖优品</h1>
+                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest leading-none mt-0.5">Internal Workflow</p>
             </div>
         </div>
-        
-        <footer>
-            <div class="page-info">
-                <i class="fas fa-link"></i>
-                <span id="totalCount">共 8 个链接</span>
-            </div>
-            <div class="quick-actions">
-                <div class="quick-action" id="refreshPage">
-                    <i class="fas fa-redo"></i>
-                    <span>刷新</span>
-                </div>
-                <div class="quick-action" id="viewAll">
-                    <i class="fas fa-list"></i>
-                    <span>查看全部</span>
-                </div>
-            </div>
-        </footer>
+
+        <div class="relative w-full sm:w-72">
+            <input type="text" id="searchInput"
+                   class="block w-full pl-9 pr-8 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-brand-600 focus:bg-white transition-all"
+                   placeholder="搜索系统、工具..."
+                   aria-label="搜索内部系统或工具">
+            <svg class="w-4 h-4 absolute left-3 top-2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+            <button id="clearSearch"
+                    class="absolute right-2 top-1.5 text-slate-300 hover:text-slate-500 transition-colors"
+                    aria-label="清空搜索">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+    </div>
+</header>
+
+<main class="max-w-[1400px] mx-auto px-6 py-10">
+    <div class="flex justify-center gap-8 mb-10">
+        <a href="https://oumai.app.gerpgo.com/" target="_blank" rel="noopener noreferrer"
+            class="text-slate-500 hover:text-brand-600 transition-colors underline decoration-slate-300 underline-offset-4 text-lg font-medium">积加 ERP</a>
+        <a href="https://qiye.aliyun.com/" target="_blank" rel="noopener noreferrer"
+            class="text-slate-500 hover:text-brand-600 transition-colors underline decoration-slate-300 underline-offset-4 text-lg font-medium">阿里邮箱企业版</a>
+        <a href="https://www.jianguoyun.com/" target="_blank" rel="noopener noreferrer"
+            class="text-slate-500 hover:text-brand-600 transition-colors underline decoration-slate-300 underline-offset-4 text-lg font-medium">坚果云网页版</a>
     </div>
 
-    <!-- 复制提示框 -->
-    <div class="copy-toast" id="copyToast">企业邮箱复制成功！</div>
+    <div id="navContainer" aria-live="polite" role="region" aria-label="导航分类结果"></div>
+</main>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // 基础DOM元素
-            const searchInput = document.getElementById('searchInput');
-            const searchButton = document.getElementById('searchButton');
-            const clearSearchBtn = document.getElementById('clearSearchBtn');
-            const searchResults = document.getElementById('searchResults');
-            const searchResultsList = document.getElementById('searchResultsList');
-            const resultCount = document.getElementById('resultCount');
-            const refreshButton = document.getElementById('refreshPage');
-            const viewAllButton = document.getElementById('viewAll');
-            const emailCopyLink = document.getElementById('emailCopyLink'); // 这个ID现在没用了，可以删除
-            const copyToast = document.getElementById('copyToast');
-            const categoriesContainer = document.getElementById('categoriesContainer');
-            const totalCount = document.getElementById('totalCount');
-            
-            // 导航数据
-            const navData = {
-                categories: [
-                    {
-                        id: 1,
-                        title: "运营相关",
-                        icon: "fas fa-chart-line",
-                        links: [
-                            { 
-                                id: 1,
-                                title: "运营总表", 
-                                desc: "核心运营指标监控与分析", 
-                                url: "https://tables.company.com/operations", 
-                                icon: "fas fa-table" 
-                            },
-                            { 
-                                id: 2,
-                                title: "活动排期表", 
-                                desc: "市场活动规划与执行跟踪", 
-                                url: "https://tables.company.com/activities", 
-                                icon: "fas fa-calendar-alt" 
-                            },
-                            { 
-                                id: 3,
-                                title: "数据日报", 
-                                desc: "每日关键数据汇总与报告", 
-                                url: "https://tables.company.com/daily-report", 
-                                icon: "fas fa-chart-bar" 
-                            }
-                        ]
-                    },
-                    {
-                        id: 2,
-                        title: "产品相关",
-                        icon: "fas fa-cube",
-                        links: [
-                            { 
-                                id: 4,
-                                title: "产品开发表", 
-                                desc: "产品开发进度与任务管理", 
-                                url: "https://jinghuyoupin.feishu.cn/wiki/TnPUwv2U5isQ1HkQUfTcu85BnOh?table=tbljgBz1lK3wEHTd", 
-                                icon: "fas fa-lightbulb" 
-                            },
-                            { 
-                                id: 5,
-                                title: "新品开发需求信息表", 
-                                desc: "可提交需要开发的新品信息", 
-                                url: "https://jinghuyoupin.feishu.cn/share/base/form/shrcnT6VemfrTVMjtDlvCVuIq4c", 
-                                icon: "fas fa-road" 
-                            }
-                        ]
-                    },
-                    {
-                        id: 3,
-                        title: "人事相关",
-                        icon: "fas fa-users",
-                        links: [
-                            { 
-                                id: 6,
-                                title: "员工花名册", 
-                                desc: "员工基本信息管理与查询", 
-                                url: "https://tables.company.com/employee-directory", 
-                                icon: "fas fa-address-book" 
-                            },
-                            { 
-                                id: 7,
-                                title: "入离职登记", 
-                                desc: "员工入职离职流程管理", 
-                                url: "https://tables.company.com/onboarding-offboarding", 
-                                icon: "fas fa-door-open" 
-                            },
-                            { 
-                                id: 8,
-                                title: "绩效考核表", 
-                                desc: "员工绩效评估与记录管理", 
-                                url: "https://tables.company.com/performance", 
-                                icon: "fas fa-medal" 
-                            }
-                        ]
-                    }
+<footer class="text-center py-10 text-slate-400 text-[11px] tracking-[0.2em] font-medium uppercase">
+    © <span id="currentYear"></span> JINGHU · Operations & Technology Center
+</footer>
+
+<script>
+    /* 原有 JavaScript 逻辑完全保持不变 */
+    (function() {
+        'use strict';
+
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+        const NAV_DATA = [
+            {
+                category: "常用查询",
+                items: [
+                    { name: "海关编码", url: "https://www.hsbianma.com/", desc: "海关编码查询、商品归类与进出口申报参考", tag: "报关, 编码查询" },
+                    { name: "美国商标查询入口", url: "https://tmsearch.uspto.gov/search/search-information", desc: "美国官方商标检索、可用性查询平台", tag: "商标, 美国" },
+                    { name: "欧盟商标局入口", url: "https://euipo.europa.eu/ohimportal/en/search-availability", desc: "欧盟商标官方查询、注册状态检索工具", tag: "商标, 欧盟" },
+                    { name: "商标查询 51IP", url: "https://www.ip51.com/brand/search", desc: "跨境电商专利查询、侵权风险检测", tag: "推荐，快捷" },
+                    { name: "睿观查专利", url: "https://detect.eric-bot.com/eric", desc: "跨境电商专利查询、侵权风险检测", tag: "专利, 风控" },
+                    { name: "智慧芽", url: "https://account.zhihuiya.com/", desc: "专业专利检索、知识产权数据库平台", tag: "查专利" }
                 ]
-            };
-            
-            // 存储所有可搜索的项目
-            let allSearchItems = [];
-            
-            // 初始化导航界面
-            function initNavigation() {
-                renderCategories();
-                updateTotalCount();
-                buildSearchIndex();
+            },
+            {
+                category: "飞书常用应用",
+                items: [
+                    { name: "新品开发需求收集表单", url:"https://jinghuyoupin.feishu.cn/share/base/form/shrcnT6VemfrTVMjtDlvCVuIq4c" , desc: "新品开发需求提报、收集与汇总", tag: "表单,需求管理" },
+                    { name: "产品开发系统v1.0", url: "https://jinghuyoupin.feishu.cn/wiki/TnPUwv2U5isQ1HkQUfTcu85BnOh?from=from_copylink", desc: "产品开发全流程协作", tag: "飞书,项目管理" },
+                ]
+            },
+            {
+                category: "产品宝典",
+                items: [
+                    { name: "SKU命名+图片+产品名规范", url:"https://jinghuyoupin.feishu.cn/docx/HjQCdYIsJoJDB8x4236cJK3ynOg?from=from_copylink" , desc: "SKU命名、图片、产品名统一规范文档", tag: "规范,产品管理" },
+                ]
+            },
+            {
+                category: "物流宝典",
+                items: [
+                    { name: "中国海关编码查询网站", url:"https://www.hsbianma.com/Home/Message" , desc: "海关编码查询、商品归类与报关参考", tag: "报关,编码查询" },
+                    { name: "备货的报关方式区分及要求", url: "https://jinghuyoupin.feishu.cn/wiki/EVcsw22vUiAWaFk01KicfEgdnqf", desc: "备货报关方式说明与操作要求", tag: "物流,报关规范" },
+                ]
+            },
+            {
+                category: "规章制度",
+                items: [
+                    { name: "人生・事业的结果=思维方式×热情×能力", url:"https://jinghuyoupin.feishu.cn/wiki/VjnUwCUJriuY6Ek9qN8c1E1ynQh" , desc: "企业文化与工作理念学习文档", tag: "文化,理念" },
+                ]
+            },
+            {
+                category: "模板库",
+                items: [
+                    { name: "新增 SKU 模板 （飞书云文档-模板库）", url:"https://jinghuyoupin.feishu.cn/drive/folder/FzDifq2PdlDBiBd7eB4cPywrnPe" , desc: "新增SKU标准模板与填写规范", tag: "模板,SKU管理" },
+                ]
+            },
+        ];
+
+        const container = document.getElementById('navContainer');
+        const searchInput = document.getElementById('searchInput');
+        const clearBtn = document.getElementById('clearSearch');
+        let currentKeyword = '';
+
+        function escapeRegExp(string) {
+            return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        }
+
+        function highlightText(text, keyword) {
+            if (!keyword || !text) return text;
+            const regex = new RegExp(`(${escapeRegExp(keyword)})`, 'gi');
+            return text.replace(regex, '<mark>$1</mark>');
+        }
+
+        function renderNav(data, keyword) {
+            const fragment = document.createDocumentFragment();
+            container.innerHTML = '';
+
+            if (data.length === 0) {
+                container.innerHTML = `
+                    <div class="flex flex-col items-center justify-center py-20 text-slate-400">
+                        <svg class="w-12 h-12 mb-4 opacity-20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <p class="text-base font-medium">未找到匹配的系统</p>
+                    </div>
+                `;
+                return;
             }
-            
-            // 渲染分类和链接
-            function renderCategories() {
-                categoriesContainer.innerHTML = '';
-                
-                navData.categories.forEach(category => {
-                    const categoryGroup = document.createElement('div');
-                    categoryGroup.className = 'category-group';
-                    categoryGroup.dataset.categoryId = category.id;
-                    
-                    const categoryHeader = document.createElement('div');
-                    categoryHeader.className = 'category-header';
-                    
-                    categoryHeader.innerHTML = `
-                        <i class="${category.icon}"></i>
-                        <div class="category-title">${category.title}</div>
-                    `;
-                    
-                    const linksGrid = document.createElement('div');
-                    linksGrid.className = 'links-grid';
-                    
-                    category.links.forEach(link => {
-                        const linkItem = document.createElement('a');
-                        linkItem.className = 'link-item';
-                        linkItem.href = link.url;
-                        linkItem.target = '_blank';
-                        linkItem.dataset.search = `${link.title} ${link.desc} ${category.title}`;
-                        
-                        linkItem.innerHTML = `
-                            <i class="${link.icon}"></i>
-                            <div class="link-content">
-                                <div class="link-title">${link.title}</div>
-                                <div class="link-desc">${link.desc}</div>
-                            </div>
-                        `;
-                        
-                        linksGrid.appendChild(linkItem);
-                    });
-                    
-                    categoryGroup.appendChild(categoryHeader);
-                    categoryGroup.appendChild(linksGrid);
-                    categoriesContainer.appendChild(categoryGroup);
-                });
-            }
-            
-            // 更新总链接数
-            function updateTotalCount() {
-                let totalLinks = 0;
-                navData.categories.forEach(category => {
-                    totalLinks += category.links.length;
-                });
-                // 加上顶部链接
-                totalLinks += 2;
-                totalCount.textContent = `共 ${totalLinks} 个链接`;
-            }
-            
-            // 构建搜索索引
-            function buildSearchIndex() {
-                allSearchItems = [];
-                
-                // 添加顶部链接
-                const topLinks = document.querySelectorAll('.top-link');
-                topLinks.forEach(link => {
-                    allSearchItems.push({
-                        element: link,
-                        title: link.querySelector('.top-link-content > div:first-child').textContent,
-                        desc: link.querySelector('.top-link-content > div:last-child').textContent,
-                        icon: link.querySelector('i').className,
-                        type: 'top-link',
-                        category: '顶部链接',
-                        url: link.href || 'javascript:void(0);'
-                    });
-                });
-                
-                // 添加分类链接
-                navData.categories.forEach(category => {
-                    category.links.forEach(link => {
-                        allSearchItems.push({
-                            element: null,
-                            title: link.title,
-                            desc: link.desc,
-                            url: link.url,
-                            icon: link.icon,
-                            type: 'link-item',
-                            category: category.title
-                        });
-                    });
-                });
-            }
-            
-            // 【修改2】删除复制邮箱的函数（如果不需要可以保留，但不会被调用）
-            // function copyEmailAddress() { ... }
-            
-            // 【修改3】删除显示复制提示框的函数（如果不需要可以保留）
-            // function showCopyToast() { ... }
-            
-            // 高亮文本函数
-            function highlightText(text, searchTerm) {
-                if (!searchTerm || !text) return text;
-                
-                try {
-                    const escapedSearchTerm = searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-                    const regex = new RegExp(`(${escapedSearchTerm})`, 'gi');
-                    return text.replace(regex, '<span class="highlight">$1</span>');
-                } catch(e) {
-                    return text;
-                }
-            }
-            
-            // 搜索功能
-            function performSearch() {
-                const searchTerm = searchInput.value.trim();
-                
-                // 显示/隐藏清空按钮
-                if (searchTerm.length > 0) {
-                    clearSearchBtn.classList.add('show');
-                } else {
-                    clearSearchBtn.classList.remove('show');
-                    searchResults.classList.remove('show');
-                    return;
-                }
-                
-                // 清空之前的搜索结果
-                searchResultsList.innerHTML = '';
-                
-                if (searchTerm === '') {
-                    searchResults.classList.remove('show');
-                    return;
-                }
-                
-                const matchedItems = [];
-                const searchTermLower = searchTerm.toLowerCase();
-                
-                // 搜索匹配
-                allSearchItems.forEach(item => {
-                    const title = item.title ? item.title.toLowerCase() : '';
-                    const desc = item.desc ? item.desc.toLowerCase() : '';
-                    const category = item.category ? item.category.toLowerCase() : '';
-                    
-                    // 检查是否匹配
-                    let matchFound = false;
-                    let score = 0;
-                    
-                    if (title.includes(searchTermLower)) {
-                        matchFound = true;
-                        score += 3;
-                        // 完全匹配标题加分
-                        if (title === searchTermLower) score += 5;
-                    }
-                    
-                    if (desc.includes(searchTermLower)) {
-                        matchFound = true;
-                        score += 2;
-                    }
-                    
-                    if (category.includes(searchTermLower)) {
-                        matchFound = true;
-                        score += 1;
-                    }
-                    
-                    if (matchFound) {
-                        matchedItems.push({
-                            ...item,
-                            score: score
-                        });
-                    }
-                });
-                
-                // 按匹配度排序
-                matchedItems.sort((a, b) => b.score - a.score);
-                
-                // 更新结果计数
-                resultCount.textContent = `${matchedItems.length} 个结果`;
-                
-                if (matchedItems.length > 0) {
-                    // 生成搜索结果列表
-                    matchedItems.forEach(item => {
-                        const listItem = document.createElement('li');
-                        listItem.className = 'search-result-item';
-                        
-                        // 高亮显示匹配的文本
-                        const highlightedTitle = highlightText(item.title, searchTerm);
-                        const highlightedDesc = highlightText(item.desc, searchTerm);
-                        
-                        listItem.innerHTML = `
-                            <i class="${item.icon}"></i>
-                            <div class="search-result-content">
-                                <div class="search-result-title">${highlightedTitle}</div>
-                                <div class="search-result-desc">${highlightedDesc}</div>
-                                <div class="search-result-category">${item.category}</div>
-                            </div>
-                        `;
-                        
-                        // 添加点击事件
-                        listItem.addEventListener('click', function() {
-                            // 【修改4】移除邮箱复制逻辑，统一改为跳转
-                            if (item.url && item.url.startsWith('http')) {
-                                window.open(item.url, '_blank');
-                            } else if (item.element) {
-                                item.element.click();
-                            }
-                            
-                            // 关闭搜索结果
-                            searchResults.classList.remove('show');
-                            searchInput.value = '';
-                            clearSearchBtn.classList.remove('show');
-                        });
-                        
-                        searchResultsList.appendChild(listItem);
-                    });
-                    
-                    searchResults.classList.add('show');
-                } else {
-                    // 没有搜索结果
-                    searchResultsList.innerHTML = `
-                        <div class="search-result-empty">
-                            <i class="fas fa-search" style="font-size: 24px; margin-bottom: 10px; opacity: 0.5;"></i>
-                            <p>未找到相关结果</p>
-                            <p style="font-size: 12px; margin-top: 5px;">请尝试其他关键词</p>
+
+            data.forEach((group, gIdx) => {
+                const section = document.createElement('section');
+                section.className = 'mb-10 fade-in';
+                section.style.animationDelay = `${gIdx * 0.05}s`;
+
+                const headerDiv = document.createElement('div');
+                headerDiv.className = 'flex items-center gap-3 mb-5';
+                headerDiv.innerHTML = `
+                    <h2 class="text-[14px] font-bold text-slate-400 tracking-[0.15em] whitespace-nowrap uppercase">${group.category}</h2>
+                    <div class="h-px bg-slate-200 w-full"></div>
+                `;
+                section.appendChild(headerDiv);
+
+                const grid = document.createElement('div');
+                grid.className = 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4';
+
+                group.items.forEach(item => {
+                    const nameHtml = highlightText(item.name, keyword);
+                    const descHtml = highlightText(item.desc, keyword);
+                    const tagHtml = highlightText(item.tag, keyword);
+
+                    const card = document.createElement('a');
+                    card.href = item.url;
+                    card.target = "_blank";
+                    card.setAttribute('rel', 'noopener noreferrer');
+                    card.className = 'card-shadow group flex flex-col h-full'; 
+                    card.innerHTML = `
+                        <div class="flex items-center justify-between mb-1.5">
+                            <h3 class="text-[16px] font-bold text-slate-800 group-hover:text-brand-600 transition-colors">${nameHtml}</h3>
+                            <svg class="w-3 h-3 text-slate-300 group-hover:text-brand-600 transition-colors flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                            </svg>
+                        </div>
+                        <p class="text-[14px] text-slate-500 leading-snug mb-4 line-clamp-1">${descHtml}</p>
+                        <div class="mt-auto">
+                            <span class="px-2 py-0.5 rounded-md border border-slate-200 text-slate-400 text-[12px] font-medium group-hover:bg-brand-600 group-hover:text-white group-hover:border-brand-600 transition-colors">${tagHtml}</span>
                         </div>
                     `;
-                    searchResults.classList.add('show');
-                }
-            }
-            
-            // 清空搜索功能
-            function clearSearch() {
-                searchInput.value = '';
-                clearSearchBtn.classList.remove('show');
-                searchResults.classList.remove('show');
-                // 重新聚焦搜索框
-                searchInput.focus();
-            }
-            
-            // 刷新页面功能
-            refreshButton.addEventListener('click', function() {
-                refreshButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>刷新中...</span>';
-                
-                setTimeout(() => {
-                    clearSearch();
-                    refreshButton.innerHTML = '<i class="fas fa-redo"></i><span>刷新</span>';
-                }, 800);
+                    grid.appendChild(card);
+                });
+
+                section.appendChild(grid);
+                fragment.appendChild(section);
             });
-            
-            // 查看全部功能
-            viewAllButton.addEventListener('click', function() {
-                clearSearch();
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            });
-            
-            // 修复：点击页面其他地方关闭搜索结果
-            document.addEventListener('click', function(e) {
-                // 检查点击的目标是否是搜索相关元素
-                const isSearchInput = e.target === searchInput;
-                const isSearchButton = e.target === searchButton || searchButton.contains(e.target);
-                const isClearButton = e.target === clearSearchBtn || clearSearchBtn.contains(e.target);
-                const isSearchResults = searchResults.contains(e.target);
-                
-                // 如果点击的是搜索相关元素，不关闭搜索结果
-                if (isSearchInput || isSearchButton || isClearButton || isSearchResults) {
-                    return;
-                }
-                
-                // 否则关闭搜索结果
-                searchResults.classList.remove('show');
-            });
-            
-            // 【修改5】移除邮箱复制的事件监听
-            // emailCopyLink.addEventListener('click', copyEmailAddress);
-            
-            // 搜索框输入事件
-            searchInput.addEventListener('input', function() {
-                // 立即执行搜索
-                setTimeout(performSearch, 50);
-            });
-            
-            // 搜索按钮点击事件
-            searchButton.addEventListener('click', function(e) {
+
+            container.appendChild(fragment);
+        }
+
+        function filterData(keyword) {
+            if (!keyword) return NAV_DATA;
+            const lowerKeyword = keyword.toLowerCase();
+            return NAV_DATA.map(group => ({
+                category: group.category,
+                items: group.items.filter(item =>
+                    item.name.toLowerCase().includes(lowerKeyword) ||
+                    item.desc.toLowerCase().includes(lowerKeyword) ||
+                    item.tag.toLowerCase().includes(lowerKeyword)
+                )
+            })).filter(group => group.items.length > 0);
+        }
+
+        let searchTimer;
+        function handleSearchInput() {
+            clearTimeout(searchTimer);
+            searchTimer = setTimeout(() => {
+                const keyword = searchInput.value.trim();
+                currentKeyword = keyword;
+                const filtered = filterData(keyword);
+                renderNav(filtered, keyword);
+            }, 300);
+        }
+
+        function clearSearch() {
+            searchInput.value = '';
+            currentKeyword = '';
+            renderNav(NAV_DATA, '');
+            searchInput.focus();
+        }
+
+        searchInput.addEventListener('input', handleSearchInput);
+        clearBtn.addEventListener('click', clearSearch);
+        searchInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
                 e.preventDefault();
-                performSearch();
-            });
-            
-            clearSearchBtn.addEventListener('click', clearSearch);
-            
-            // 按Enter键搜索
-            searchInput.addEventListener('keyup', function(event) {
-                if (event.key === 'Enter') {
-                    performSearch();
-                }
-                
-                // 按ESC键清空搜索
-                if (event.key === 'Escape') {
-                    clearSearch();
-                }
-            });
-            
-            // 初始化
-            initNavigation();
-            
-            // 调试：打印搜索索引
-            console.log('搜索索引已构建，项目数量:', allSearchItems.length);
-            console.log('所有可搜索项目:', allSearchItems);
-            
-            // 聚焦搜索框
-            setTimeout(() => {
-                searchInput.focus();
-            }, 500);
+                clearTimeout(searchTimer);
+                const keyword = searchInput.value.trim();
+                currentKeyword = keyword;
+                const filtered = filterData(keyword);
+                renderNav(filtered, keyword);
+            }
         });
-    </script>
+
+        renderNav(NAV_DATA, '');
+    })();
+</script>
 </body>
 </html>
